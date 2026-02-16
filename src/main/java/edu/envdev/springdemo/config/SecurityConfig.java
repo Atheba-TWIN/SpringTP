@@ -39,6 +39,7 @@ public class SecurityConfig {
 
         .authorizeHttpRequests(auth -> auth
             .requestMatchers("/", "/index.html", "/css/**", "/js/**").permitAll()
+            .requestMatchers("/login").permitAll()
             .requestMatchers("/403").permitAll()
             .requestMatchers("/users/register", "/users/register-form").permitAll()
 
@@ -59,8 +60,13 @@ public class SecurityConfig {
             .requestMatchers("/users/**").hasRole("ADMIN")
             .anyRequest().authenticated())
 
-        .httpBasic(httpBasic -> {
-        })
+        .formLogin(form -> form
+            .loginPage("/login")
+            .defaultSuccessUrl("/api/employes/list", true)
+            .permitAll())
+        .logout(logout -> logout
+            .logoutSuccessUrl("/login?logout")
+            .permitAll())
         .exceptionHandling(ex -> ex.accessDeniedPage("/403"));
 
     return http.build();

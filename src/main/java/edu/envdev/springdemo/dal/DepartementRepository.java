@@ -7,4 +7,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface DepartementRepository extends JpaRepository<Departement, Integer> {
   boolean existsByNomIgnoreCaseAndEntreprise_Id(String nom, Integer entrepriseId);
+
+  boolean existsByNomIgnoreCaseAndEntreprise_IdAndIdNot(String nom, Integer entrepriseId, Integer id);
 }

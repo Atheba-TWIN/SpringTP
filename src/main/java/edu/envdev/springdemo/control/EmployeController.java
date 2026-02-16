@@ -27,9 +27,13 @@ public class EmployeController {
 
   // Page HTML pour afficher la liste (accessible à EMPLOYEE et ADMIN)
   @GetMapping("/list")
-  public String listPage(Model model) {
+  public String listPage(Model model, Authentication authentication) {
     List<Employe> employes = service.findAll();
     model.addAttribute("employes", employes);
+    boolean isAdmin = authentication != null && authentication.getAuthorities().stream()
+        .map(GrantedAuthority::getAuthority)
+        .anyMatch("ROLE_ADMIN"::equals);
+    model.addAttribute("isAdmin", isAdmin);
     return "employes-list";
   }
 

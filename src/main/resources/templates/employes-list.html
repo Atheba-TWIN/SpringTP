@@ -202,6 +202,9 @@
         display: flex;
         gap: 8px;
       }
+      .inline-form {
+        margin: 0;
+      }
 
       .no-results {
         display: none;
@@ -254,7 +257,14 @@
             >
           </div>
         </div>
-        <a href="/users/register-form" class="btn">Ajouter un employé</a>
+        <div class="actions">
+          <a href="/api/departements/list" class="btn">Voir les départements</a>
+          <form class="inline-form" method="post" action="/logout">
+            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+            <button type="submit" class="btn btn-link">Se déconnecter</button>
+          </form>
+          <a th:if="${isAdmin}" href="/users/register-form" class="btn">Ajouter un employé</a>
+        </div>
       </div>
       <div th:if="${param.updated}" class="message success">
         Employé modifié avec succès.
@@ -351,3 +361,4 @@
     </script>
   </body>
 </html>
+
