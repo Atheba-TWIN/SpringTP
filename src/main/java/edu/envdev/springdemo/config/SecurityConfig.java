@@ -39,11 +39,13 @@ public class SecurityConfig {
 
         .authorizeHttpRequests(auth -> auth
             .requestMatchers("/", "/index.html", "/css/**", "/js/**").permitAll()
+            .requestMatchers("/403").permitAll()
             .requestMatchers("/users/register", "/users/register-form").permitAll()
 
             .requestMatchers("/api/employes/list").hasAnyRole("EMPLOYEE", "ADMIN")
 
             .requestMatchers(HttpMethod.GET, "/api/employes/**").hasAnyRole("EMPLOYEE", "ADMIN")
+            .requestMatchers(HttpMethod.POST, "/api/employes/*/edit").hasAnyRole("EMPLOYEE", "ADMIN")
             .requestMatchers(HttpMethod.POST, "/api/employes/**").hasRole("ADMIN")
             .requestMatchers(HttpMethod.PUT, "/api/employes/**").hasRole("ADMIN")
             .requestMatchers(HttpMethod.DELETE, "/api/employes/**").hasRole("ADMIN")
@@ -58,7 +60,8 @@ public class SecurityConfig {
             .anyRequest().authenticated())
 
         .httpBasic(httpBasic -> {
-        });
+        })
+        .exceptionHandling(ex -> ex.accessDeniedPage("/403"));
 
     return http.build();
   }

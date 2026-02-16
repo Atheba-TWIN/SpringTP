@@ -4,6 +4,9 @@ import edu.envdev.springdemo.model.Employe;
 import edu.envdev.springdemo.service.EmployeService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.annotation.Validated;
@@ -31,8 +34,12 @@ public class EmployeController {
   }
 
   @GetMapping("/{id}/edit")
-  public String editPage(@PathVariable Integer id, Model model) {
-    model.addAttribute("employe", service.findById(id));
+  public String editPage(@PathVariable Integer id, Model model, Authentication authentication) {
+    Employe employe = service.findById(id);
+    if (!canEdit(authentication, employe)) {
+      throw new AccessDeniedException("Vous ne pouvez modifier que votre propre profil.");
+    }
+    model.addAttribute("employe", employe);
     return "employe-edit";
   }
 
@@ -41,7 +48,12 @@ public class EmployeController {
       @RequestParam String nom,
       @RequestParam String prenom,
       @RequestParam String matricule,
-      @RequestParam String fonction) {
+      @RequestParam String fonction,
+      Authentication authentication) {
+    Employe current = service.findById(id);
+    if (!canEdit(authentication, current)) {
+      throw new AccessDeniedException("Vous ne pouvez modifier que votre propre profil.");
+    }
     Employe payload = new Employe();
     payload.setNom(nom);
     payload.setPrenom(prenom);
@@ -55,6 +67,16 @@ public class EmployeController {
   public String deleteFromList(@PathVariable Integer id) {
     service.deleteById(id);
     return "redirect:/api/employes/list?deleted";
+  }
+
+  private boolean canEdit(Authentication authentication, Employe target) {
+    if (authentication == null || target == null) {
+      return false;
+    }
+    boolean isAdmin = authentication.getAuthorities().stream()
+        .map(GrantedAuthority::getAuthority)
+        .anyMatch("ROLE_ADMIN"::equals);
+    return isAdmin || authentication.getName().equalsIgnoreCase(target.getUsername());
   }
 
   // API REST endpoints (garder compatibilité)

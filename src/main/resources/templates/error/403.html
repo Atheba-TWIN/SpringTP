@@ -1,0 +1,73 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Acces refuse</title>
+    <style>
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        margin: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 20px;
+      }
+      .card {
+        background: #fff;
+        border-radius: 12px;
+        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2);
+        max-width: 620px;
+        width: 100%;
+        padding: 28px;
+      }
+      h1 {
+        margin: 0 0 8px;
+        color: #2d2d2d;
+      }
+      .code {
+        color: #764ba2;
+        font-weight: 700;
+      }
+      p {
+        color: #555;
+        line-height: 1.5;
+      }
+      .actions {
+        display: flex;
+        gap: 10px;
+        margin-top: 18px;
+        flex-wrap: wrap;
+      }
+      .btn {
+        text-decoration: none;
+        border-radius: 8px;
+        padding: 10px 14px;
+        font-weight: 600;
+        display: inline-block;
+      }
+      .btn-primary {
+        background: #2f60d0;
+        color: #fff;
+      }
+      .btn-secondary {
+        background: #eceffd;
+        color: #36427a;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="card">
+      <div class="code">Erreur 403</div>
+      <h1>Acces refuse</h1>
+      <p>Vous n'avez pas l'autorisation d'acceder a cette action.</p>
+      <p>Un employe peut modifier uniquement son propre profil. Les autres actions sensibles restent reservees a l'administrateur.</p>
+      <div class="actions">
+        <a class="btn btn-primary" href="/api/employes/list">Retour a la liste</a>
+        <a class="btn btn-secondary" href="/">Accueil</a>
+      </div>
+    </div>
+  </body>
+</html>
