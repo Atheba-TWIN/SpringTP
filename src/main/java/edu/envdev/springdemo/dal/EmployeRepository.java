@@ -6,7 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface EmployeRepository extends JpaRepository<Employe, Integer> {
-
+  boolean existsByMatricule(String matricule);
 }
-// à partir de l'entité employé, implémenter les différents services qui
-// permettront de manipuler employé

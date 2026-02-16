@@ -1,5 +1,6 @@
 package edu.envdev.springdemo.control;
 
+import edu.envdev.springdemo.dal.DepartementRepository;
 import edu.envdev.springdemo.model.User;
 import edu.envdev.springdemo.service.UserService;
 import org.springframework.stereotype.Controller;
@@ -12,59 +13,56 @@ import java.util.List;
 @RequestMapping("/users")
 public class UserController {
   private final UserService userService;
+  private final DepartementRepository departementRepository;
 
-  public UserController(UserService userService) {
+  public UserController(UserService userService, DepartementRepository departementRepository) {
     this.userService = userService;
+    this.departementRepository = departementRepository;
   }
 
-  // Afficher le formulaire d'inscription
   @GetMapping("/register-form")
   public String showRegisterForm(Model model) {
     model.addAttribute("user", new User());
-    model.addAttribute("roles", userService.findAllRoles());
+    model.addAttribute("departements", departementRepository.findAll());
     return "register";
   }
 
-  // Traiter la soumission du formulaire
   @PostMapping("/register")
   public String registerUser(
-      @RequestParam String username,
       @RequestParam String password,
-      @RequestParam String roleName,
-      @RequestParam(required = false) String nom,
+      @RequestParam String nom,
+      @RequestParam String prenom,
+      @RequestParam String matricule,
+      @RequestParam String fonction,
+      @RequestParam Integer departementId,
       Model model) {
     try {
-      userService.createUser(username, password, roleName, nom);
-      model.addAttribute("message", "Utilisateur créé avec succès!");
-      model.addAttribute("roles", userService.findAllRoles());
+      userService.createUser(password, nom, prenom, matricule, fonction, departementId);
       return "redirect:/users/register-form?success";
     } catch (Exception e) {
       model.addAttribute("error", "Erreur: " + e.getMessage());
       model.addAttribute("user", new User());
-      model.addAttribute("roles", userService.findAllRoles());
+      model.addAttribute("departements", departementRepository.findAll());
       return "register";
     }
   }
 
-  // API REST: lister les utilisateurs (ADMIN only)
   @GetMapping
   @ResponseBody
   public List<User> listUsers() {
     return userService.findAll();
   }
 
-  // API REST: récupérer un utilisateur
   @GetMapping("/{id}")
   @ResponseBody
   public User getUser(@PathVariable Integer id) {
     return userService.findById(id);
   }
 
-  // API REST: supprimer un utilisateur
   @DeleteMapping("/{id}")
   @ResponseBody
   public String deleteUser(@PathVariable Integer id) {
     userService.deleteById(id);
-    return "Utilisateur supprimé avec succès";
+    return "Utilisateur supprime avec succes";
   }
 }

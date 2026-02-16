@@ -30,6 +30,33 @@ public class EmployeController {
     return "employes-list";
   }
 
+  @GetMapping("/{id}/edit")
+  public String editPage(@PathVariable Integer id, Model model) {
+    model.addAttribute("employe", service.findById(id));
+    return "employe-edit";
+  }
+
+  @PostMapping("/{id}/edit")
+  public String editSubmit(@PathVariable Integer id,
+      @RequestParam String nom,
+      @RequestParam String prenom,
+      @RequestParam String matricule,
+      @RequestParam String fonction) {
+    Employe payload = new Employe();
+    payload.setNom(nom);
+    payload.setPrenom(prenom);
+    payload.setMatricule(matricule);
+    payload.setFonction(fonction);
+    service.update(id, payload);
+    return "redirect:/api/employes/list?updated";
+  }
+
+  @PostMapping("/{id}/delete")
+  public String deleteFromList(@PathVariable Integer id) {
+    service.deleteById(id);
+    return "redirect:/api/employes/list?deleted";
+  }
+
   // API REST endpoints (garder compatibilité)
   @GetMapping
   @ResponseBody

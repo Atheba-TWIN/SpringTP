@@ -1,9 +1,29 @@
 {
   "properties": [
     {
-      "name": "Server.port",
+      "name": "server.port",
+      "type": "java.lang.Integer",
+      "description": "HTTP server port."
+    },
+    {
+      "name": "app.bootstrap.admin.username",
       "type": "java.lang.String",
-      "description": "A description for 'Server.port'"
+      "description": "Optional bootstrap admin username created at startup when both username and password are set."
+    },
+    {
+      "name": "app.bootstrap.admin.password",
+      "type": "java.lang.String",
+      "description": "Optional bootstrap admin password created at startup when both username and password are set."
+    },
+    {
+      "name": "app.bootstrap.entreprise.nom",
+      "type": "java.lang.String",
+      "description": "Singleton entreprise name seeded on startup."
+    },
+    {
+      "name": "app.bootstrap.departement.nom",
+      "type": "java.lang.String",
+      "description": "Default department name seeded on startup if none exists."
     }
   ]
 }

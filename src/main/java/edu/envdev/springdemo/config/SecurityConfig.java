@@ -35,29 +35,30 @@ public class SecurityConfig {
   public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
     http
-        .csrf(csrf -> csrf.disable())
+        .csrf(csrf -> csrf.ignoringRequestMatchers("/api/**"))
 
         .authorizeHttpRequests(auth -> auth
             .requestMatchers("/", "/index.html", "/css/**", "/js/**").permitAll()
             .requestMatchers("/users/register", "/users/register-form").permitAll()
-            .requestMatchers("/h2-console/**").permitAll()
 
-            // Pages HTML employés et liste
             .requestMatchers("/api/employes/list").hasAnyRole("EMPLOYEE", "ADMIN")
 
-            // API Employés
-            .requestMatchers(HttpMethod.GET, "/api/employes").hasAnyRole("EMPLOYEE", "ADMIN")
             .requestMatchers(HttpMethod.GET, "/api/employes/**").hasAnyRole("EMPLOYEE", "ADMIN")
-            .requestMatchers(HttpMethod.POST, "/api/employes").hasRole("ADMIN")
+            .requestMatchers(HttpMethod.POST, "/api/employes/**").hasRole("ADMIN")
             .requestMatchers(HttpMethod.PUT, "/api/employes/**").hasRole("ADMIN")
             .requestMatchers(HttpMethod.DELETE, "/api/employes/**").hasRole("ADMIN")
+
+            .requestMatchers(HttpMethod.GET, "/api/entreprise").hasAnyRole("EMPLOYEE", "ADMIN")
+            .requestMatchers(HttpMethod.PUT, "/api/entreprise").hasRole("ADMIN")
+
+            .requestMatchers(HttpMethod.GET, "/api/departements/**").hasAnyRole("EMPLOYEE", "ADMIN")
+            .requestMatchers(HttpMethod.POST, "/api/departements/**").hasRole("ADMIN")
 
             .requestMatchers("/users/**").hasRole("ADMIN")
             .anyRequest().authenticated())
 
         .httpBasic(httpBasic -> {
-        })
-        .headers(headers -> headers.frameOptions(frame -> frame.disable()));
+        });
 
     return http.build();
   }
